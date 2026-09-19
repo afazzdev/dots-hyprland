@@ -16,12 +16,14 @@ StyledPopup {
         return (bytes / (1024 * 1024 * 1024)).toFixed(1) + " GB";
     }
 
-    Row {
+    GridLayout {
         anchors.centerIn: parent
-        spacing: 12
+        columns: 3
+        rowSpacing: 16
+        columnSpacing: 24
 
         Column {
-            anchors.top: parent.top
+            Layout.alignment: Qt.AlignTop
             spacing: 8
 
             StyledPopupHeaderRow {
@@ -50,7 +52,7 @@ StyledPopup {
 
         Column {
             visible: ResourceUsage.swapTotal > 0
-            anchors.top: parent.top
+            Layout.alignment: Qt.AlignTop
             spacing: 8
 
             StyledPopupHeaderRow {
@@ -78,7 +80,7 @@ StyledPopup {
         }
 
         Column {
-            anchors.top: parent.top
+            Layout.alignment: Qt.AlignTop
             spacing: 8
 
             StyledPopupHeaderRow {
@@ -121,7 +123,7 @@ StyledPopup {
 
         Column {
             visible: ResourceUsage.gpuAvailable
-            anchors.top: parent.top
+            Layout.alignment: Qt.AlignTop
             spacing: 8
 
             StyledPopupHeaderRow {
@@ -160,7 +162,7 @@ StyledPopup {
         }
 
         Column {
-            anchors.top: parent.top
+            Layout.alignment: Qt.AlignTop
             spacing: 8
 
             StyledPopupHeaderRow {
