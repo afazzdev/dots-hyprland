@@ -3,6 +3,9 @@
 > This file lives on the `custom` branch only (never on `main`), so it
 > travels with the fork to other machines. Clone with
 > `git clone -b custom git@github.com:afazzdev/dots-hyprland.git`.
+>
+> AI help: `.opencode/skills/hyprland-customize/SKILL.md` (same branch)
+> teaches agents this fork's layout, deploy flow, and rules.
 
 Fork: https://github.com/afazzdev/dots-hyprland
 Upstream (mainline): https://github.com/end-4/dots-hyprland
