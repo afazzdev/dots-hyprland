@@ -37,6 +37,22 @@ MouseArea {
             warningThreshold: Config.options.bar.resources.cpuWarningThreshold
         }
 
+        Resource {
+            Layout.alignment: Qt.AlignHCenter
+            iconName: "developer_board"
+            percentage: ResourceUsage.gpuUsage
+            visible: ResourceUsage.gpuAvailable || root.alwaysShowAllResources
+            warningThreshold: Config.options.bar.resources.gpuWarningThreshold
+        }
+
+        Resource {
+            Layout.alignment: Qt.AlignHCenter
+            iconName: "speed"
+            // No % semantic for throughput: fill relative to ~100 Mbit/s for a lively indicator
+            percentage: Math.min(1, Math.max(ResourceUsage.netDownSpeed, ResourceUsage.netUpSpeed) / (12.5 * 1024 * 1024))
+            visible: Config.options.bar.resources.alwaysShowNetwork || root.alwaysShowAllResources
+        }
+
     }
 
     Bar.ResourcesPopup {

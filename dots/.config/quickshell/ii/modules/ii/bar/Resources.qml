@@ -1,4 +1,5 @@
 import qs.modules.common
+import qs.modules.common.widgets
 import qs.services
 import QtQuick
 import QtQuick.Layouts
@@ -43,6 +44,36 @@ MouseArea {
                 root.alwaysShowAllResources
             Layout.leftMargin: shown ? 6 : 0
             warningThreshold: Config.options.bar.resources.cpuWarningThreshold
+        }
+
+        Resource {
+            iconName: "developer_board"
+            percentage: ResourceUsage.gpuUsage
+            shown: (ResourceUsage.gpuAvailable || root.alwaysShowAllResources) &&
+                (Config.options.bar.resources.alwaysShowGpu ||
+                !(MprisController.activePlayer?.trackTitle?.length > 0) ||
+                root.alwaysShowAllResources)
+            Layout.leftMargin: shown ? 6 : 0
+            warningThreshold: Config.options.bar.resources.gpuWarningThreshold
+        }
+
+        RowLayout {
+            visible: Config.options.bar.resources.alwaysShowNetwork || root.alwaysShowAllResources
+            spacing: 2
+            Layout.leftMargin: 6
+            MaterialSymbol {
+                Layout.alignment: Qt.AlignVCenter
+                fill: 1
+                text: "speed"
+                iconSize: Appearance.font.pixelSize.normal
+                color: Appearance.m3colors.m3onSecondaryContainer
+            }
+            StyledText {
+                Layout.alignment: Qt.AlignVCenter
+                color: Appearance.colors.colOnLayer1
+                font.pixelSize: Appearance.font.pixelSize.small
+                text: `↓ ${ResourceUsage.formatSpeed(ResourceUsage.netDownSpeed)} ↑ ${ResourceUsage.formatSpeed(ResourceUsage.netUpSpeed)}`
+            }
         }
 
     }
