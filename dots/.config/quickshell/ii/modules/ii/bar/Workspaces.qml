@@ -61,11 +61,45 @@ ButtonMouseArea {
         Hyprland.dispatch(`hl.dsp.workspace.toggle_special("special")`);
     }
 
+    function toggleWorkspaceMenu(wsId) {
+        if (wsMenuLoader.active) {
+            if (wsMenuLoader.item && typeof wsMenuLoader.item.close === "function")
+                wsMenuLoader.item.close();
+            wsMenuLoader.active = false;
+            if (wsMenuLoader.targetWsId === wsId)
+                return;
+        }
+        wsMenuLoader.targetWsId = wsId;
+        wsMenuLoader.active = true;
+    }
+
+    Loader {
+        id: wsMenuLoader
+        property int targetWsId: -1
+        active: false
+        sourceComponent: WorkspaceContextMenu {
+            wsId: wsMenuLoader.targetWsId
+            showSpecialToggle: true
+            anchor {
+                window: root.QsWindow.window
+                item: root
+                gravity: Config.options.bar.vertical
+                    ? (Config.options.bar.bottom ? Edges.Left : Edges.Right)
+                    : (Config.options.bar.bottom ? Edges.Top : Edges.Bottom)
+                edges: Config.options.bar.vertical
+                    ? (Config.options.bar.bottom ? Edges.Left : Edges.Right)
+                    : (Config.options.bar.bottom ? Edges.Top : Edges.Bottom)
+            }
+            Component.onCompleted: this.open()
+            onMenuClosed: wsMenuLoader.active = false
+        }
+    }
+
     onPressed: mouse => {
         if (mouse.button == Qt.LeftButton)
             switchWorkspaceToHovered();
         else if (mouse.button == Qt.RightButton)
-            GlobalStates.overviewOpen = !GlobalStates.overviewOpen;
+            toggleWorkspaceMenu(wsModel.getWorkspaceIdAt(hoverIndex));
         else if (mouse.button == Qt.BackButton) 
             toggleSpecial()
     }

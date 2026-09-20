@@ -30,6 +30,13 @@ Customized files (Quickshell resource widgets):
 - dots/.config/quickshell/ii/modules/ii/verticalBar/Resources.qml
 - dots/.config/quickshell/ii/services/ResourceUsage.qml
 
+Customized files (workspace right-click context menu):
+- dots/.config/quickshell/ii/modules/common/widgets/WorkspaceContextMenu.qml (new shared menu)
+- dots/.config/quickshell/ii/modules/ii/bar/Workspaces.qml (RMB opens menu instead of overview)
+- dots/.config/quickshell/ii/modules/ii/bar/BarContent.qml (removed RMB-toggle-overview overlay stealing clicks)
+- dots/.config/quickshell/ii/modules/ii/verticalBar/VerticalBarContent.qml (same overlay removal)
+- dots/.config/quickshell/ii/modules/ii/overview/OverviewWidget.qml (RMB on grid cell opens menu)
+
 ## SSH / identity
 - Key: `~/.ssh/id_ed25519` (add the `.pub` to GitHub under SSH keys)
 - Test: `ssh -T git@github.com` should greet you with your username

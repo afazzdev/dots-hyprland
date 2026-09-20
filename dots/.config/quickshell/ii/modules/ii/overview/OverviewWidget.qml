@@ -47,6 +47,20 @@ Item {
     property int draggingFromWorkspace: -1
     property int draggingTargetWorkspace: -1
 
+    // Tracks the open workspace context menu (one per grid cell loader) so any
+    // click inside the overview can dismiss it. True outside-clicks are already
+    // handled by GlobalFocusGrab (the overview panel itself is dismissable).
+    property Loader activeWsMenuLoader: null
+    function closeWsMenu() {
+        const loader = root.activeWsMenuLoader;
+        root.activeWsMenuLoader = null;
+        if (loader && loader.active) {
+            if (loader.item && typeof loader.item.close === "function")
+                loader.item.close();
+            loader.active = false;
+        }
+    }
+
     implicitWidth: overviewBackground.implicitWidth + Appearance.sizes.elevationMargin * 2
     implicitHeight: overviewBackground.implicitHeight + Appearance.sizes.elevationMargin * 2
 
@@ -135,11 +149,54 @@ Item {
                                 verticalAlignment: Text.AlignVCenter
                             }
 
+                            Loader {
+                                id: wsMenuLoader
+                                active: false
+                                sourceComponent: WorkspaceContextMenu {
+                                    wsId: workspace.workspaceValue
+                                    showSpecialToggle: false
+                                    anchor {
+                                        window: workspace.QsWindow.window
+                                        item: workspace
+                                        edges: Edges.Bottom
+                                        gravity: Edges.Bottom
+                                    }
+                                    Component.onCompleted: this.open()
+                                    onMenuClosed: {
+                                        if (root.activeWsMenuLoader === wsMenuLoader)
+                                            root.activeWsMenuLoader = null;
+                                        wsMenuLoader.active = false;
+                                    }
+                                }
+                            }
+
+                            Connections {
+                                target: GlobalStates
+                                function onOverviewOpenChanged() {
+                                    if (!GlobalStates.overviewOpen)
+                                        root.closeWsMenu();
+                                }
+                            }
+
                             MouseArea {
                                 id: workspaceArea
                                 anchors.fill: parent
-                                acceptedButtons: Qt.LeftButton
-                                onPressed: {
+                                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                                onPressed: (mouse) => {
+                                    if (mouse.button === Qt.RightButton) {
+                                        if (root.draggingFromWorkspace !== -1)
+                                            return;
+                                        if (wsMenuLoader.active) {
+                                            root.closeWsMenu();
+                                        } else {
+                                            root.closeWsMenu();
+                                            wsMenuLoader.active = true;
+                                            root.activeWsMenuLoader = wsMenuLoader;
+                                        }
+                                        mouse.accepted = true;
+                                        return;
+                                    }
+                                    root.closeWsMenu();
                                     if (root.draggingTargetWorkspace === -1) {
                                         GlobalStates.overviewOpen = false
                                         Hyprland.dispatch(`hl.dsp.focus({ workspace = ${workspace.workspaceValue} })`)
@@ -252,6 +309,7 @@ Item {
                         acceptedButtons: Qt.LeftButton | Qt.MiddleButton
                         drag.target: parent
                         onPressed: (mouse) => {
+                            root.closeWsMenu();
                             root.draggingFromWorkspace = windowData?.workspace.id
                             window.pressed = true
                             window.Drag.active = true
@@ -281,6 +339,7 @@ Item {
                         }
                         onClicked: (event) => {
                             if (!windowData) return;
+                            root.closeWsMenu();
 
                             if (event.button === Qt.LeftButton) {
                                 GlobalStates.overviewOpen = false
