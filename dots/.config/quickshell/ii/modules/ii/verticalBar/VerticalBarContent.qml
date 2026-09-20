@@ -73,6 +73,10 @@ Item { // Bar content region
                 colBackground: barTopSectionMouseArea.hovered ? Appearance.colors.colLayer1Hover : ColorUtils.transparentize(Appearance.colors.colLayer1Hover, 1)
             }
 
+            Bar.SearchButton { // Overview search button
+                Layout.alignment: Qt.AlignHCenter
+            }
+
             Item {
                 Layout.fillHeight: true
             }

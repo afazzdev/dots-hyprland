@@ -37,6 +37,11 @@ Customized files (workspace right-click context menu):
 - dots/.config/quickshell/ii/modules/ii/verticalBar/VerticalBarContent.qml (same overlay removal)
 - dots/.config/quickshell/ii/modules/ii/overview/OverviewWidget.qml (RMB on grid cell opens menu)
 
+Customized files (bar search button):
+- dots/.config/quickshell/ii/modules/ii/bar/SearchButton.qml (new, toggles overview search)
+- dots/.config/quickshell/ii/modules/ii/bar/BarContent.qml (search button in left section)
+- dots/.config/quickshell/ii/modules/ii/verticalBar/VerticalBarContent.qml (search button in top section)
+
 ## SSH / identity
 - Key: `~/.ssh/id_ed25519` (add the `.pub` to GitHub under SSH keys)
 - Test: `ssh -T git@github.com` should greet you with your username
